@@ -20,12 +20,12 @@ public class ItemMapper {
         );
     }
 
-    public List<ItemDto> toItemDtoList(List<Item> items){
+    public List<ItemDto> toItemDtoList(List<Item> items) {
         List<ItemDto> listDto = new ArrayList<ItemDto>();
-        if(items.size()==0) {
+        if (items.size() == 0) {
             return listDto;
         }
-        for (Item item: items){
+        for (Item item : items) {
             ItemDto dto = toItemDto(item);
             listDto.add(dto);
         }

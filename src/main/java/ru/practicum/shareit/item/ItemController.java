@@ -27,6 +27,7 @@ public class ItemController {
         this.itemService = itemService;
         this.itemMapper = itemMapper;
     }
+
     @PostMapping
     public ItemDto add(@RequestHeader("X-Sharer-User-Id") long userId,
                        @Valid @RequestBody Item item) {
@@ -36,8 +37,8 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     public ItemDto update(@RequestHeader("X-Sharer-User-Id") long userId,
-                       @PathVariable long itemId,
-                       @Valid @RequestBody ItemForUpdate item) {
+                          @PathVariable long itemId,
+                          @Valid @RequestBody ItemForUpdate item) {
         Item itemUpdate = inMemoryItemStorage.update(userId, itemId, item);
         return itemMapper.toItemDto(itemUpdate);
     }
@@ -51,14 +52,14 @@ public class ItemController {
 
     @GetMapping("/{itemId}")
     public ItemDto getItem(@RequestHeader("X-Sharer-User-Id") long idUser,
-                        @PathVariable long itemId) {
+                           @PathVariable long itemId) {
         Item item = inMemoryItemStorage.findById(itemId);
         return itemMapper.toItemDto(item);
     }
 
     @GetMapping("/search")
     public List<ItemDto> getItemSearch(@RequestHeader("X-Sharer-User-Id") long idUser,
-                                         @RequestParam(required = false) String text) {
+                                       @RequestParam(required = false) String text) {
         ArrayList<Item> list = itemService.search(text, idUser);
         return itemMapper.toItemDtoList(list);
     }
