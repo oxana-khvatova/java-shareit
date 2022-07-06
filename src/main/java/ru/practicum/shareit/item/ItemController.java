@@ -3,58 +3,63 @@ package ru.practicum.shareit.item;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.model.ItemForUpdate;
+import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * // TODO .
- */
 @Slf4j
 @RestController
 @RequestMapping("/items")
 public class ItemController {
 
-    InMemoryItemStorage inMemoryItemStorage;
+    ItemStorage inMemoryItemStorage;
+    ItemService itemService;
+    ItemMapper itemMapper;
 
     @Autowired
-    public ItemController(InMemoryItemStorage inMemoryItemStorage) {
+    public ItemController(ItemStorage inMemoryItemStorage, ItemService itemService, ItemMapper itemMapper) {
         this.inMemoryItemStorage = inMemoryItemStorage;
+        this.itemService = itemService;
+        this.itemMapper = itemMapper;
     }
-
     @PostMapping
-    public Item add(@RequestHeader("X-Sharer-User-Id") long userId,
-                    @Valid @RequestBody Item item) {
+    public ItemDto add(@RequestHeader("X-Sharer-User-Id") long userId,
+                       @Valid @RequestBody Item item) {
         inMemoryItemStorage.add(userId, item);
-        return item;
+        return itemMapper.toItemDto(item);
     }
 
     @PatchMapping("/{itemId}")
-    public Item update(@RequestHeader("X-Sharer-User-Id") long userId,
+    public ItemDto update(@RequestHeader("X-Sharer-User-Id") long userId,
                        @PathVariable long itemId,
                        @Valid @RequestBody ItemForUpdate item) {
-        return inMemoryItemStorage.update(userId, itemId, item);
+        Item itemUpdate = inMemoryItemStorage.update(userId, itemId, item);
+        return itemMapper.toItemDto(itemUpdate);
     }
 
     @GetMapping
-    public List<Item> getAll(@RequestHeader("X-Sharer-User-Id") long idUser) {
-        List<Item> allUserItems = new ArrayList<>(inMemoryItemStorage.findAll(idUser));
+    public List<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") long idUser) {
+        List<Item> allUserItems = new ArrayList<>(inMemoryItemStorage.findAllOwnerItems(idUser));
         log.info("У пользователя в базе: {}", allUserItems.size());
-        return allUserItems;
+        return itemMapper.toItemDtoList(allUserItems);
     }
 
     @GetMapping("/{itemId}")
-    public Item getItem(@RequestHeader("X-Sharer-User-Id") long idUser,
+    public ItemDto getItem(@RequestHeader("X-Sharer-User-Id") long idUser,
                         @PathVariable long itemId) {
-        return inMemoryItemStorage.findById(itemId);
+        Item item = inMemoryItemStorage.findById(itemId);
+        return itemMapper.toItemDto(item);
     }
 
     @GetMapping("/search")
-    public ArrayList<Item> getItemSearch(@RequestHeader("X-Sharer-User-Id") long idUser,
+    public List<ItemDto> getItemSearch(@RequestHeader("X-Sharer-User-Id") long idUser,
                                          @RequestParam(required = false) String text) {
-        return inMemoryItemStorage.search(text, idUser);
+        ArrayList<Item> list = itemService.search(text, idUser);
+        return itemMapper.toItemDtoList(list);
     }
 }

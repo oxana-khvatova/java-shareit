@@ -7,12 +7,10 @@ import lombok.NonNull;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-/**
- * // TODO .
- */
 @Data
 @AllArgsConstructor
 public class ItemDto {
+    private Long id;
     @NonNull
     @NotBlank
     private String name;

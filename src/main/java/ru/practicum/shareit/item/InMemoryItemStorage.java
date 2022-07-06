@@ -8,13 +8,10 @@ import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.model.ItemForUpdate;
-import ru.practicum.shareit.user.InMemoryUserStorage;
+import ru.practicum.shareit.user.UserStorage;
 
 import javax.validation.ValidationException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -22,11 +19,11 @@ import java.util.stream.Collectors;
 public class InMemoryItemStorage implements ItemStorage {
 
     private final Map<Long, Item> items = new HashMap<>();
-    private final InMemoryUserStorage inMemoryUserStorage;
+    private final UserStorage inMemoryUserStorage;
     private static long idGenerator = 1;
 
     @Autowired
-    public InMemoryItemStorage(InMemoryUserStorage inMemoryUserStorage) {
+    public InMemoryItemStorage(UserStorage inMemoryUserStorage) {
         this.inMemoryUserStorage = inMemoryUserStorage;
     }
 
@@ -90,7 +87,7 @@ public class InMemoryItemStorage implements ItemStorage {
     }
 
     @Override
-    public List<Item> findAll(long idOwner) {
+    public List<Item> findAllOwnerItems(long idOwner) {
         return items.values().stream().filter(item -> idOwner == (item.getOwner().getId())).collect(Collectors.toList());
     }
 
@@ -102,21 +99,8 @@ public class InMemoryItemStorage implements ItemStorage {
         return items.get(id);
     }
 
-    public ArrayList<Item> search(String name, long idOwner) {
-        ArrayList<Item> listItem = new ArrayList<>();
-        if (name.equals("")) {
-            return listItem;
-        }
-        for (Item item : items.values()) {
-            String text = name.toLowerCase();
-            if (item.getName().toLowerCase().contains(text) && item.getAvailable()) {
-                listItem.add(item);
-            }
-            if (item.getDescription().toLowerCase().contains(text) && !listItem.contains(item)
-                    && item.getAvailable()) {
-                listItem.add(item);
-            }
-        }
-        return listItem;
+    @Override
+    public Collection<Item> findAllItems() {
+        return items.values();
     }
 }
