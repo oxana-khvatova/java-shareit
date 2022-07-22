@@ -81,12 +81,12 @@ public class BookingService {
     }
 
     public List<Booking> getAllBookingForUser(Long bookerId) {
-        return bookingRepository.findByBookerId(bookerId).stream().
-                sorted((o1, o2) -> o2.getStart().compareTo(o1.getStart())).collect(Collectors.toList());
+        return bookingRepository.findByBookerId(bookerId).stream()
+                .sorted((o1, o2) -> o2.getStart().compareTo(o1.getStart())).collect(Collectors.toList());
     }
 
     public List<Booking> getAllBookingForOwner(Long ownerId) {
-        return bookingRepository.findByOwnerId(ownerId).stream().
-                sorted((o1, o2) -> o2.getStart().compareTo(o1.getStart())).collect(Collectors.toList());
+        return bookingRepository.findByOwnerId(ownerId).stream()
+                .sorted((o1, o2) -> o2.getStart().compareTo(o1.getStart())).collect(Collectors.toList());
     }
 }

@@ -51,14 +51,14 @@ public class ItemMapperForOwner {
         ItemOwnerDto.BookingItemDto prev = null;
         ItemOwnerDto.BookingItemDto next = null;
         if (bookPrev.size() != 0) {
-            List<Booking> sortBookPrev = bookPrev.stream().
-                    sorted((o1, o2) -> o2.getStart().compareTo(o1.getStart())).collect(Collectors.toList());
+            List<Booking> sortBookPrev = bookPrev.stream()
+                    .sorted((o1, o2) -> o2.getStart().compareTo(o1.getStart())).collect(Collectors.toList());
             Booking itemOwnerDtoPtev = sortBookPrev.get(sortBookPrev.size() - 1);
             prev = new ItemOwnerDto.BookingItemDto(itemOwnerDtoPtev.getId(), itemOwnerDtoPtev.getBookerId());
         }
         if (bookNext.size() != 0) {
-            List<Booking> sortBookNext = bookNext.stream().
-                    sorted((o1, o2) -> o2.getStart().compareTo(o1.getStart())).collect(Collectors.toList());
+            List<Booking> sortBookNext = bookNext.stream()
+                    .sorted((o1, o2) -> o2.getStart().compareTo(o1.getStart())).collect(Collectors.toList());
             Booking itemOwnerDtoNext = sortBookNext.get(0);
             next = new ItemOwnerDto.BookingItemDto(itemOwnerDtoNext.getId(), itemOwnerDtoNext.getBookerId());
         }
