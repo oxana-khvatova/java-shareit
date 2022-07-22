@@ -4,6 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemOwnerDto;
+import ru.practicum.shareit.item.mapper.CommentMapper;
+import ru.practicum.shareit.item.mapper.ItemMapper;
+import ru.practicum.shareit.item.mapper.ItemMapperForOwner;
+import ru.practicum.shareit.item.model.Comments;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.model.ItemForUpdate;
 import ru.practicum.shareit.item.service.ItemService;
@@ -16,51 +22,61 @@ import java.util.List;
 @RestController
 @RequestMapping("/items")
 public class ItemController {
-
-    ItemStorage inMemoryItemStorage;
     ItemService itemService;
     ItemMapper itemMapper;
+    CommentMapper commentMapper;
+    ItemMapperForOwner itemMapperForOwner;
 
     @Autowired
-    public ItemController(ItemStorage inMemoryItemStorage, ItemService itemService, ItemMapper itemMapper) {
-        this.inMemoryItemStorage = inMemoryItemStorage;
+    public ItemController(ItemService itemService, ItemMapper itemMapper,
+                          CommentMapper commentMapper, ItemMapperForOwner itemMapperForOwner) {
         this.itemService = itemService;
         this.itemMapper = itemMapper;
+        this.commentMapper = commentMapper;
+        this.itemMapperForOwner = itemMapperForOwner;
     }
 
     @PostMapping
     public ItemDto add(@RequestHeader("X-Sharer-User-Id") long userId,
                        @Valid @RequestBody Item item) {
-        inMemoryItemStorage.add(userId, item);
-        return itemMapper.toItemDto(item);
+        Item itemSave = itemService.save(item, userId);
+        return itemMapper.toItemDto(itemSave);
     }
 
     @PatchMapping("/{itemId}")
     public ItemDto update(@RequestHeader("X-Sharer-User-Id") long userId,
                           @PathVariable long itemId,
                           @Valid @RequestBody ItemForUpdate item) {
-        Item itemUpdate = inMemoryItemStorage.update(userId, itemId, item);
+        Item itemUpdate = itemService.upDate(item, userId, itemId);
         return itemMapper.toItemDto(itemUpdate);
     }
 
     @GetMapping
-    public List<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") long idUser) {
-        List<Item> allUserItems = new ArrayList<>(inMemoryItemStorage.findAllOwnerItems(idUser));
-        log.info("У пользователя в базе: {}", allUserItems.size());
-        return itemMapper.toItemDtoList(allUserItems);
+    public List<ItemOwnerDto> getAll(@RequestHeader("X-Sharer-User-Id") long idUser) {
+        List<Item> allUserItems = new ArrayList<>(itemService.findAllOwnerItems(idUser));
+        log.info("У пользователя в базе: {}", allUserItems.size() + " предметов");
+        return itemMapperForOwner.toItemDtoList(allUserItems, idUser);
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItem(@RequestHeader("X-Sharer-User-Id") long idUser,
-                           @PathVariable long itemId) {
-        Item item = inMemoryItemStorage.findById(itemId);
-        return itemMapper.toItemDto(item);
+    public ItemOwnerDto getItem(@RequestHeader("X-Sharer-User-Id") long idUser,
+                                @PathVariable long itemId) {
+        Item item = itemService.findById(itemId);
+        return itemMapperForOwner.toItemOwnerDto(item, idUser);
     }
 
     @GetMapping("/search")
     public List<ItemDto> getItemSearch(@RequestHeader("X-Sharer-User-Id") long idUser,
                                        @RequestParam(required = false) String text) {
-        ArrayList<Item> list = itemService.search(text, idUser);
+        List<Item> list = itemService.search(text);
         return itemMapper.toItemDtoList(list);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") long userId,
+                                 @PathVariable long itemId,
+                                 @Valid @RequestBody Comments comments) {
+        Comments commentsSave = itemService.addComments(userId, itemId, comments);
+        return commentMapper.toCommentDto(commentsSave);
     }
 }
