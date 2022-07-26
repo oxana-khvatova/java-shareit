@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.model.UserForUpdate;
+import ru.practicum.shareit.user.service.UserService;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -16,18 +17,18 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
-    UserStorage inMemoryUserStorage;
+    UserService userService;
     UserMapper userMapper;
 
     @Autowired
-    public UserController(UserStorage inMemoryUserStorage, UserMapper userMapper) {
-        this.inMemoryUserStorage = inMemoryUserStorage;
+    public UserController(UserService userService, UserMapper userMapper) {
+        this.userService = userService;
         this.userMapper = userMapper;
     }
 
     @GetMapping
     public List<UserDto> getAll() {
-        List<User> allUsers = new ArrayList<>(inMemoryUserStorage.findAll());
+        List<User> allUsers = new ArrayList<>(userService.findAll());
         log.info("Пользователей в базе: {}", allUsers.size());
         return userMapper.toUserDtoList(allUsers);
     }
@@ -35,26 +36,26 @@ public class UserController {
     @GetMapping("/{id}")
     public UserDto getUser(@PathVariable long id) {
         log.info("Запрошен пользователь id: " + id);
-        User user = inMemoryUserStorage.findById(id);
+        User user = userService.findById(id);
         return userMapper.toUserDto(user);
     }
 
     @PostMapping
     public UserDto create(@Valid @RequestBody User user) {
-        inMemoryUserStorage.add(user);
+        userService.save(user);
         log.info("Новый пользователь: " + user);
         return userMapper.toUserDto(user);
     }
 
     @PatchMapping("/{id}")
-    public UserDto update(@PathVariable long id, @Valid @RequestBody UserForUpdate user) {
+    public UserDto update(@PathVariable long id, @Valid @RequestBody UserForUpdate userForUpdate) {
+        User user = userService.upDate(userForUpdate, id);
         log.info("Update user: " + user);
-        User userUpdate = inMemoryUserStorage.update(id, user);
-        return userMapper.toUserDto(userUpdate);
+        return userMapper.toUserDto(user);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable long id) {
-        inMemoryUserStorage.delete(inMemoryUserStorage.findById(id));
+    public void deleteById(@PathVariable long id) {
+        userService.deleteById(id);
     }
 }

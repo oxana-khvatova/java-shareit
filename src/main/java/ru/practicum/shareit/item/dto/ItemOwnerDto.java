@@ -10,7 +10,15 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class ItemDto {
+public class ItemOwnerDto {
+    @Data
+    @AllArgsConstructor
+    public static class BookingItemDto {
+        @NonNull
+        private Long id;
+        @NonNull
+        private Long bookerId;
+    }
 
     private Long id;
     @NonNull
@@ -23,4 +31,6 @@ public class ItemDto {
     private Long idItemRequest;
     private Long idOwner;
     private List<CommentDto> comments;
+    private BookingItemDto lastBooking;
+    private BookingItemDto nextBooking;
 }

@@ -19,6 +19,14 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleItemNotFoundException(final ItemNotFoundException e) {
+        return new ErrorResponse(
+                String.format("Ошибка с полем \"%s\".", e.getMessage())
+        );
+    }
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleEmailException(final UserAlreadyExist e) {
         return new ErrorResponse(
@@ -45,6 +53,22 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse handleValidationException(final ForbiddenAccessException e) {
+        return new ErrorResponse(
+                "Exception" + e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBookingIsImpossible(final BookingIsImpossible e) {
+        return new ErrorResponse(
+                "Exception" + e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleBookingNotFoundException(final BookingNotFoundException e) {
         return new ErrorResponse(
                 "Exception" + e.getMessage()
         );
