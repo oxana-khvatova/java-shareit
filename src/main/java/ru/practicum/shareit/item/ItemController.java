@@ -40,6 +40,7 @@ public class ItemController {
     public ItemDto add(@RequestHeader("X-Sharer-User-Id") long userId,
                        @Valid @RequestBody Item item) {
         Item itemSave = itemService.save(item, userId);
+        log.info("Add item " + item);
         return itemMapper.toItemDto(itemSave);
     }
 
@@ -47,8 +48,8 @@ public class ItemController {
     public ItemDto update(@RequestHeader("X-Sharer-User-Id") long userId,
                           @PathVariable long itemId,
                           @Valid @RequestBody ItemForUpdate item) {
-        Item itemUpdate = itemService.upDate(item, userId, itemId);
-        return itemMapper.toItemDto(itemUpdate);
+        log.info("udDate item " + item);
+        return itemService.upDate(item, userId, itemId);
     }
 
     @GetMapping

@@ -11,6 +11,9 @@ import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.item.CommentRepository;
 import ru.practicum.shareit.item.ItemRepository;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.mapper.ItemMapper;
+import ru.practicum.shareit.item.mapper.ItemMapperForOwner;
 import ru.practicum.shareit.item.model.Comments;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.model.ItemForUpdate;
@@ -29,14 +32,19 @@ public class ItemService {
     UserRepository userRepository;
     CommentRepository commentRepository;
     BookingRepository bookingRepository;
+    ItemMapper itemMapper;
+    ItemMapperForOwner itemMapperForOwner;
 
     @Autowired
     public ItemService(ItemRepository itemRepository, UserRepository userRepository,
-                       CommentRepository commentRepository, BookingRepository bookingRepository) {
+                       CommentRepository commentRepository, BookingRepository bookingRepository, ItemMapper itemMapper,
+                       ItemMapperForOwner itemMapperForOwner) {
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
         this.bookingRepository = bookingRepository;
+        this.itemMapper = itemMapper;
+        this.itemMapperForOwner = itemMapperForOwner;
     }
 
     public List<Item> search(String name) {
@@ -55,7 +63,7 @@ public class ItemService {
         return itemRepository.save(item);
     }
 
-    public Item upDate(ItemForUpdate item, Long userId, Long itemId) {
+    public ItemDto upDate(ItemForUpdate item, Long userId, Long itemId) {
         Item itemUpDate = findById(itemId);
         if (!Objects.equals(itemUpDate.getOwner(), userId)) {
             throw new ForbiddenAccessException("Updating an item is only possible for owner");
@@ -69,7 +77,7 @@ public class ItemService {
         if (item.getAvailable() != null) {
             itemUpDate.setAvailable(item.getAvailable());
         }
-        return itemRepository.save(itemUpDate);
+        return itemMapper.toItemDto(itemRepository.save(itemUpDate));
     }
 
     public Item findById(Long id) {
