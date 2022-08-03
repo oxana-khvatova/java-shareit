@@ -32,7 +32,7 @@ public class ItemMapperForOwner {
                     item.getDescription(),
                     item.getAvailable(),
                     item.getRequest() != null ? item.getRequest() : null,
-                    item.getRequest() != null ? item.getRequest() : null,
+                    item.getOwner() != null ? item.getOwner() : null,
                     commentMapper.toCommentListDto(item.getComments()),
                     null,
                     null
@@ -69,7 +69,7 @@ public class ItemMapperForOwner {
                 item.getDescription(),
                 item.getAvailable(),
                 item.getRequest() != null ? item.getRequest() : null,
-                item.getRequest() != null ? item.getRequest() : null,
+                item.getOwner() != null ? item.getOwner() : null,
                 commentMapper.toCommentListDto(item.getComments()),
                 prev,
                 next

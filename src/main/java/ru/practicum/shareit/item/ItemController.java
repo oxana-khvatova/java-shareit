@@ -53,8 +53,10 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemOwnerDto> getAll(@RequestHeader("X-Sharer-User-Id") long idUser) {
-        List<Item> allUserItems = new ArrayList<>(itemService.findAllOwnerItems(idUser));
+    public List<ItemOwnerDto> getAll(@RequestHeader("X-Sharer-User-Id") long idUser,
+                                     @RequestParam(required = false, defaultValue = "0") int from,
+                                     @RequestParam(required = false, defaultValue = "20") int size) {
+        List<Item> allUserItems = new ArrayList<>(itemService.findAllOwnerItems(idUser, from, size));
         log.info("У пользователя в базе: {}", allUserItems.size() + " предметов");
         return itemMapperForOwner.toItemDtoList(allUserItems, idUser);
     }
@@ -68,8 +70,10 @@ public class ItemController {
 
     @GetMapping("/search")
     public List<ItemDto> getItemSearch(@RequestHeader("X-Sharer-User-Id") long idUser,
-                                       @RequestParam(required = false) String text) {
-        List<Item> list = itemService.search(text);
+                                       @RequestParam(required = false) String text,
+                                       @RequestParam(required = false, defaultValue = "0") int from,
+                                       @RequestParam(required = false, defaultValue = "20") int size) {
+        List<Item> list = itemService.search(text, from, size);
         return itemMapper.toItemDtoList(list);
     }
 

@@ -24,7 +24,7 @@ public class ItemMapper {
                 item.getDescription(),
                 item.getAvailable(),
                 item.getRequest() != null ? item.getRequest() : null,
-                item.getRequest() != null ? item.getRequest() : null,
+                item.getOwner() != null ? item.getOwner() : null,
                 commentMapper.toCommentListDto(item.getComments())
         );
     }
