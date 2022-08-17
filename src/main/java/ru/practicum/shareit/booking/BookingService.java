@@ -97,6 +97,7 @@ public class BookingService {
     }
 
     public List<BookingDto> getAllBookingForUser(Long bookerId) {
+ //       userService.findById(bookerId);
         List<Booking> bookingList = bookingRepository.findByBookerId(bookerId).stream()
                 .sorted((o1, o2) -> o2.getStart().compareTo(o1.getStart())).collect(Collectors.toList());
         return bookingMapper.toBookingDtoList(bookingList);

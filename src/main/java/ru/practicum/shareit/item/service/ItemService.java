@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,7 +20,6 @@ import ru.practicum.shareit.item.mapper.ItemMapperForOwner;
 import ru.practicum.shareit.item.model.Comments;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.model.ItemForUpdate;
-import ru.practicum.shareit.requests.ItemRequest;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;

@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 public class RequestService {
     RequestRepository requestRepository;
     ItemRequestMapper itemRequestMapper;
-
     UserService userService;
 
     @Autowired
@@ -31,7 +30,7 @@ public class RequestService {
     public ItemRequestDto save(ItemRequest itemRequest, Long userId) {
         userService.findById(userId);
         itemRequest.setUserRequesterId(userId);
-        itemRequest.setCreated(LocalDateTime.now());
+        itemRequest.setCreated(getCurrentTime());
         ItemRequest itemRequest1 = requestRepository.save(itemRequest);
         return itemRequestMapper.toItemRequestDto(itemRequest1);
     }
@@ -59,5 +58,9 @@ public class RequestService {
             return itemRequestMapper.toItemRequestDto(itemRequest);
         }
         return null;
+    }
+
+    private LocalDateTime getCurrentTime() {
+        return LocalDateTime.now();
     }
 }
