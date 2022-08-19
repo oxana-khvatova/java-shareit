@@ -6,16 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.*;
-import ru.practicum.shareit.booking.BookingMapper;
-import ru.practicum.shareit.booking.BookingRepository;
-import ru.practicum.shareit.booking.BookingService;
-import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.booking.model.BookingForAdd;
-import ru.practicum.shareit.booking.model.Status;
-import ru.practicum.shareit.item.model.Comments;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.requests.dto.ItemRequestDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
@@ -63,7 +54,7 @@ public class RequestsServiceTest {
 
         ItemRequestDto returnRequest = requestService.save(itemRequest, requester.getId());
         Assertions.assertNotNull(returnRequest.getCreated());
-        Assertions.assertEquals(itemRequest.getUserRequesterId(), returnRequest.getIdRequest());
+        Assertions.assertEquals(itemRequest.getUserRequesterId(), returnRequest.getId());
         Assertions.assertEquals(itemRequest.getDescription(), returnRequest.getDescription());
     }
 
@@ -84,7 +75,7 @@ public class RequestsServiceTest {
         ItemRequest itemRequest1 = itemRequestList.get(0);
         Assertions.assertEquals(itemRequest1.getCreated(), returnFirst.getCreated());
         Assertions.assertEquals(itemRequest1.getDescription(), returnFirst.getDescription());
-        Assertions.assertEquals(itemRequest1.getUserRequesterId(), returnFirst.getIdRequest());
+        Assertions.assertEquals(itemRequest1.getUserRequesterId(), returnFirst.getId());
     }
 
     @Test
@@ -98,12 +89,12 @@ public class RequestsServiceTest {
         Mockito
                 .when(mockRequestRepository.findAll(pageable))
                 .thenReturn(page);
-        List<ItemRequestDto> returnItemRequest = requestService.findAllRequest( 0, itemRequestList.size());
+        List<ItemRequestDto> returnItemRequest = requestService.findAllRequest(0, itemRequestList.size());
         ItemRequestDto returnFirst = returnItemRequest.get(0);
         ItemRequest itemRequest1 = itemRequestList.get(0);
         Assertions.assertEquals(itemRequest1.getCreated(), returnFirst.getCreated());
         Assertions.assertEquals(itemRequest1.getDescription(), returnFirst.getDescription());
-        Assertions.assertEquals(itemRequest1.getUserRequesterId(), returnFirst.getIdRequest());
+        Assertions.assertEquals(itemRequest1.getUserRequesterId(), returnFirst.getId());
     }
 
     @Test
@@ -114,6 +105,6 @@ public class RequestsServiceTest {
         ItemRequestDto returnItemRequest = requestService.getRequest(itemRequest.getId());
         Assertions.assertEquals(itemRequest.getCreated(), returnItemRequest.getCreated());
         Assertions.assertEquals(itemRequest.getDescription(), returnItemRequest.getDescription());
-        Assertions.assertEquals(itemRequest.getUserRequesterId(), returnItemRequest.getIdRequest());
+        Assertions.assertEquals(itemRequest.getUserRequesterId(), returnItemRequest.getId());
     }
 }

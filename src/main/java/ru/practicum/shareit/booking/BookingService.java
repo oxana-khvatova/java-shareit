@@ -97,13 +97,14 @@ public class BookingService {
     }
 
     public List<BookingDto> getAllBookingForUser(Long bookerId) {
- //       userService.findById(bookerId);
+        userService.findById(bookerId); // Проверка, что пользователь существует;
         List<Booking> bookingList = bookingRepository.findByBookerId(bookerId).stream()
                 .sorted((o1, o2) -> o2.getStart().compareTo(o1.getStart())).collect(Collectors.toList());
         return bookingMapper.toBookingDtoList(bookingList);
     }
 
     public List<BookingDto> getAllBookingForOwner(Long ownerId) {
+        userService.findById(ownerId); // Проверка, что владелец существует;
         List<Booking> bookingList = bookingRepository.findByOwnerId(ownerId).stream()
                 .sorted((o1, o2) -> o2.getStart().compareTo(o1.getStart())).collect(Collectors.toList());
         return bookingMapper.toBookingDtoList(bookingList);

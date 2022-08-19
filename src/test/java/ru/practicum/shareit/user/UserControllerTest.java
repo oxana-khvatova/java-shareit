@@ -3,102 +3,125 @@ package ru.practicum.shareit.user;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.booking.BookingMapper;
-import ru.practicum.shareit.booking.BookingRepository;
-import ru.practicum.shareit.booking.BookingService;
-import ru.practicum.shareit.item.ItemController;
-import ru.practicum.shareit.item.mapper.CommentMapper;
-import ru.practicum.shareit.item.mapper.ItemMapper;
-import ru.practicum.shareit.item.mapper.ItemMapperForOwner;
-import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.requests.RequestService;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.model.UserForUpdate;
 import ru.practicum.shareit.user.service.UserService;
 
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.eq;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WebMvcTest(UserController.class)
 public class UserControllerTest {
-    @MockBean
-    private BookingService bookingService;
-
-    @MockBean
-    private BookingRepository bookingRepository;
-
-    @MockBean
-    private ItemService itemService;
-
-    @MockBean
-    private ItemMapper itemMapper;
-
-    @MockBean
-    private ItemMapperForOwner itemMapperForOwner;
-
-    @MockBean
-    private CommentMapper commentMapper;
-
     @MockBean
     private UserService userService;
 
     @MockBean
-    private BookingMapper bookingMapper;
-
-    @MockBean
-    private RequestService requestService;
-
-    @MockBean
     private UserMapper userMapper;
 
-    private UserService repository;
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
 
     @Autowired
-    public UserControllerTest(MockMvc mockMvc, ObjectMapper objectMapper, UserService repository) {
+    public UserControllerTest(UserService userService, MockMvc mockMvc,
+                              ObjectMapper objectMapper) {
+        this.userService = userService;
         this.mockMvc = mockMvc;
         this.objectMapper = objectMapper;
-        this.repository = repository;
     }
+
     static User user;
+
     @BeforeEach
     public void init() {
         user = new User();
         user.setName("Ivan");
         user.setEmail("email@com.ru");
         user.setId(10L);
-
-//        updatedUser = new UserForUpdate();
-//        updatedUser.setName("Maxim");
-//        updatedUser.setEmail("email123@com.ru");
-//        updatedUser.setId(10L);
-//
-//        badUser = new User();
-//        badUser.setName("Maxim");
-//        badUser.setEmail("emailcom.ru");
-//        badUser.setId(11L);
     }
 
-//    @Test
-//    public void givenPerson_whenAdd_thenStatus201andPersonReturned() throws Exception {
-//        Mockito.when(repository.save(Mockito.any())).thenReturn(user);
-//        mockMvc.perform(
-//                        post("/users")
-//                                .content(objectMapper.writeValueAsString(user))
-//                                .contentType(MediaType.APPLICATION_JSON)
-//                )
-//                .andExpect(status().isCreated())
-//                .andExpect(jsonPath("$.id").isNumber());
-//    }
+    @Test
+    public void createUser_thenStatus200andPersonReturned() throws Exception {
+        Mockito.when(userService.save(Mockito.any())).thenReturn(user);
+        Mockito.when(userMapper.toUserDto(Mockito.any())).thenCallRealMethod();
+        mockMvc.perform(
+                        post("/users")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(user))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(user.getId()))
+                .andExpect(jsonPath("$.name").value(user.getName()));
+    }
+
+    @Test
+    public void upDateUser_thenStatus200andPersonReturned() throws Exception {
+        Mockito.when(userService.upDate(Mockito.any(), eq(user.getId()))).thenReturn(user);
+        Mockito.when(userMapper.toUserDto(Mockito.any())).thenCallRealMethod();
+        mockMvc.perform(
+                        patch("/users/{id}", user.getId())
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(user))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(user.getId()))
+                .andExpect(jsonPath("$.name").value(user.getName()));
+    }
+
+    @Test
+    public void getUser_thenStatus200andPersonReturned() throws Exception {
+        Mockito.when(userService.findById(Mockito.anyLong())).thenReturn(user);
+        Mockito.when(userMapper.toUserDto(Mockito.any())).thenCallRealMethod();
+        mockMvc.perform(
+                        get("/users/{id}", user.getId())
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(user.getId()))
+                .andExpect(jsonPath("$.name").value(user.getName()));
+    }
+
+    @Test
+    public void getAllUser_thenStatus200andPersonReturned() throws Exception {
+        List<User> users = new ArrayList<>();
+        users.add(user);
+
+        Mockito.when(userService.findAll()).thenReturn(users);
+        Mockito.when(userMapper.toUserDto(Mockito.any())).thenCallRealMethod();
+        Mockito.when(userMapper.toUserDtoList(Mockito.any())).thenCallRealMethod();
+        mockMvc.perform(
+                        get("/users")
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteByIdUser_thenStatus200andPersonReturned() throws Exception {
+        Mockito.when(userMapper.toUserDto(Mockito.any())).thenCallRealMethod();
+
+        mockMvc.perform(
+                        delete("/users/{id}", user.getId())
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(user))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk());
+
+        Mockito.verify(userService, Mockito.times(1)).deleteById(user.getId());
+    }
 }

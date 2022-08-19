@@ -25,7 +25,6 @@ public class BookingDto {
         private String description;
         @NonNull
         private Boolean available;
-
     }
 
     @Data
