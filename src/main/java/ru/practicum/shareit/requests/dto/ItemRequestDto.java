@@ -10,9 +10,11 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 public class ItemRequestDto {
+    @NotNull
+    private Long id;
     @Size(max = 300)
     private String description;
     @NotNull
-    private Long id;
+    private Long requesterId;
     private LocalDateTime created;
 }

@@ -54,7 +54,7 @@ public class RequestsServiceTest {
 
         ItemRequestDto returnRequest = requestService.save(itemRequest, requester.getId());
         Assertions.assertNotNull(returnRequest.getCreated());
-        Assertions.assertEquals(itemRequest.getUserRequesterId(), returnRequest.getId());
+        Assertions.assertEquals(itemRequest.getUserRequesterId(), returnRequest.getRequesterId());
         Assertions.assertEquals(itemRequest.getDescription(), returnRequest.getDescription());
     }
 
@@ -75,7 +75,7 @@ public class RequestsServiceTest {
         ItemRequest itemRequest1 = itemRequestList.get(0);
         Assertions.assertEquals(itemRequest1.getCreated(), returnFirst.getCreated());
         Assertions.assertEquals(itemRequest1.getDescription(), returnFirst.getDescription());
-        Assertions.assertEquals(itemRequest1.getUserRequesterId(), returnFirst.getId());
+        Assertions.assertEquals(itemRequest1.getUserRequesterId(), returnFirst.getRequesterId());
     }
 
     @Test
@@ -94,17 +94,17 @@ public class RequestsServiceTest {
         ItemRequest itemRequest1 = itemRequestList.get(0);
         Assertions.assertEquals(itemRequest1.getCreated(), returnFirst.getCreated());
         Assertions.assertEquals(itemRequest1.getDescription(), returnFirst.getDescription());
-        Assertions.assertEquals(itemRequest1.getUserRequesterId(), returnFirst.getId());
+        Assertions.assertEquals(itemRequest1.getUserRequesterId(), returnFirst.getRequesterId());
     }
 
     @Test
-    void shouldПetRequest() {
+    void shouldGetRequest() {
         Mockito
                 .when(mockRequestRepository.findById(Mockito.anyLong()))
                 .thenReturn(Optional.of(itemRequest));
         ItemRequestDto returnItemRequest = requestService.getRequest(itemRequest.getId());
         Assertions.assertEquals(itemRequest.getCreated(), returnItemRequest.getCreated());
         Assertions.assertEquals(itemRequest.getDescription(), returnItemRequest.getDescription());
-        Assertions.assertEquals(itemRequest.getUserRequesterId(), returnItemRequest.getId());
+        Assertions.assertEquals(itemRequest.getUserRequesterId(), returnItemRequest.getRequesterId());
     }
 }

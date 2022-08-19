@@ -10,6 +10,7 @@ import java.util.List;
 public class ItemRequestMapper {
     public ItemRequestDto toItemRequestDto(ItemRequest itemRequest) {
         return new ItemRequestDto(
+                itemRequest.getId(),
                 itemRequest.getDescription(),
                 itemRequest.getUserRequesterId(),
                 itemRequest.getCreated()

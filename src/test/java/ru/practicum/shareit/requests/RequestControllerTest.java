@@ -39,7 +39,7 @@ public class RequestControllerTest {
 
     @BeforeEach
     public void init() {
-        itemRequestDto = new ItemRequestDto("Table", 1L, LocalDateTime.now());
+        itemRequestDto = new ItemRequestDto(1L, "Table", 1L, LocalDateTime.now());
 
         itemRequest = new ItemRequest();
         itemRequest.setId(3L);
