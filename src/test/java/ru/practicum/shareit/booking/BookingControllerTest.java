@@ -12,6 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.BookingForAdd;
 import ru.practicum.shareit.booking.model.Status;
+import ru.practicum.shareit.exception.BookingIsImpossible;
+import ru.practicum.shareit.exception.BookingNotFoundException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -32,8 +34,8 @@ public class BookingControllerTest {
 
     @MockBean
     BookingMapper bookingMapper;
-    private MockMvc mockMvc;
-    private ObjectMapper objectMapper;
+    private final MockMvc mockMvc;
+    private final ObjectMapper objectMapper;
 
     @Autowired
     public BookingControllerTest(BookingService bookingService, MockMvc mockMvc, ObjectMapper objectMapper) {
@@ -96,6 +98,20 @@ public class BookingControllerTest {
     }
 
     @Test
+    public void createBookingForUnavailable() throws Exception {
+        Mockito.when(bookingService.save(Mockito.any(), eq(bookingDtoBooker.getId())))
+                        .thenThrow(new BookingIsImpossible("impossible"));
+        mockMvc.perform(
+                        post("/bookings")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(booking))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("X-Sharer-User-Id", bookingDto.getBooker().getId())
+                )
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void upDateBooking_thenStatus200andBookingReturned() throws Exception {
         Mockito.when(bookingService.upDateStatus(Mockito.anyLong(), eq(booking.getId()), Mockito.anyString()))
                 .thenReturn(bookingDto);
@@ -122,6 +138,19 @@ public class BookingControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(bookingDto.getId()));
+    }
+
+    @Test
+    public void getUnknownBooking_thenStatus404andReturned() throws Exception {
+        Mockito.when(bookingService.getBooking(Mockito.anyLong(), Mockito.anyLong())).thenThrow(
+                BookingNotFoundException.class
+        );
+        mockMvc.perform(
+                        get("/bookings/{bookingId}", booking.getId())
+                                .accept(MediaType.APPLICATION_JSON)
+                                .header("X-Sharer-User-Id", bookingDto.getBooker().getId())
+                )
+                .andExpect(status().isNotFound());
     }
 
     @Test

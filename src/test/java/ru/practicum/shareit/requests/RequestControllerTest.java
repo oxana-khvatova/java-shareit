@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.exception.ItemRequestNotFoundException;
 import ru.practicum.shareit.requests.dto.ItemRequestDto;
 
 import java.time.LocalDateTime;
@@ -24,8 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class RequestControllerTest {
     @MockBean
     RequestService requestService;
-    private MockMvc mockMvc;
-    private ObjectMapper objectMapper;
+    private final MockMvc mockMvc;
+    private final ObjectMapper objectMapper;
 
     @Autowired
     public RequestControllerTest(RequestService requestService, MockMvc mockMvc, ObjectMapper objectMapper) {
@@ -107,5 +108,17 @@ public class RequestControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.description").value(itemRequest.getDescription()));
+    }
+
+    @Test
+    public void getUnknownRequest_thenStatus200() throws Exception {
+        Mockito.when(requestService.getRequest(Mockito.anyLong()))
+                .thenThrow(new ItemRequestNotFoundException("not found"));
+        mockMvc.perform(
+                        get("/requests/{requestId}", itemRequestDto.getId())
+                                .accept(MediaType.APPLICATION_JSON)
+                                .header("X-Sharer-User-Id", 2)
+                )
+                .andExpect(status().isNotFound());
     }
 }

@@ -38,7 +38,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleValidationException(final RuntimeException e) {
         return new ErrorResponse(
-                "Exception" + e.getMessage()
+                "Exception: " + e.getMessage()
         );
     }
 
@@ -46,7 +46,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse handleValidationException(final ForbiddenAccessException e) {
         return new ErrorResponse(
-                "Exception" + e.getMessage()
+                "Exception: " + e.getMessage()
         );
     }
 
@@ -54,7 +54,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBookingIsImpossible(final BookingIsImpossible e) {
         return new ErrorResponse(
-                "Exception" + e.getMessage()
+                "Exception: " + e.getMessage()
         );
     }
 
@@ -62,7 +62,15 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleBookingNotFoundException(final BookingNotFoundException e) {
         return new ErrorResponse(
-                "Exception" + e.getMessage()
+                "Exception: " + e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleItemRequestNotFoundException(final ItemRequestNotFoundException e) {
+        return new ErrorResponse(
+                "Exception: " + e.getMessage()
         );
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.BookingRepository;
+import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.CommentMapper;
@@ -53,8 +54,8 @@ public class ItemControllerTest {
     @MockBean
     CommentRepository commentRepository;
 
-    private MockMvc mockMvc;
-    private ObjectMapper objectMapper;
+    private final MockMvc mockMvc;
+    private final ObjectMapper objectMapper;
 
     @Autowired
     public ItemControllerTest(ItemService itemService, MockMvc mockMvc, ObjectMapper objectMapper) {
@@ -152,6 +153,30 @@ public class ItemControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(item.getId()));
+    }
+
+    @Test
+    public void getItemNotOwner_thenStatus200() throws Exception {
+        Mockito.when(itemService.findById(Mockito.anyLong())).thenReturn(item);
+        mockMvc.perform(
+                        get("/items/{itemId}", item.getId())
+                                .accept(MediaType.APPLICATION_JSON)
+                                .header("X-Sharer-User-Id", 123)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(item.getId()));
+    }
+
+    @Test
+    public void getUnknownItem_thenStatus200() throws Exception {
+        Mockito.when(itemService.findById(Mockito.anyLong()))
+                .thenThrow(ItemNotFoundException.class);
+        mockMvc.perform(
+                        get("/items/{itemId}", item.getId())
+                                .accept(MediaType.APPLICATION_JSON)
+                                .header("X-Sharer-User-Id", item.getOwner())
+                )
+                .andExpect(status().isNotFound());
     }
 
     @Test

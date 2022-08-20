@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.ItemRequestNotFoundException;
 import ru.practicum.shareit.requests.dto.ItemRequestDto;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -57,7 +58,8 @@ public class RequestService {
             itemRequest = requestRepository.findById(requestId).get();
             return itemRequestMapper.toItemRequestDto(itemRequest);
         }
-        return null;
+
+        throw new ItemRequestNotFoundException("item request not found");
     }
 
     private LocalDateTime getCurrentTime() {

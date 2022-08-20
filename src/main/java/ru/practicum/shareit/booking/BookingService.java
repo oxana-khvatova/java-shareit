@@ -81,7 +81,7 @@ public class BookingService {
             return booking.get();
         } else {
             log.error("Бронирование невозможно, вещь недоступна");
-            throw new BookingNotFoundException(" Booking is impossible");
+            throw new BookingNotFoundException("Booking is impossible");
         }
     }
 
