@@ -14,21 +14,13 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleUserNotFoundException(final UserNotFoundException e) {
         return new ErrorResponse(
-                String.format("Ошибка с полем \"%s\".", e.getMessage())
+                String.format("Пользователь не найден: \"%s\".", e.getMessage())
         );
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleItemNotFoundException(final ItemNotFoundException e) {
-        return new ErrorResponse(
-                String.format("Ошибка с полем \"%s\".", e.getMessage())
-        );
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleEmailException(final UserAlreadyExist e) {
         return new ErrorResponse(
                 String.format("Ошибка с полем \"%s\".", e.getMessage())
         );
