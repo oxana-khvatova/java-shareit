@@ -22,10 +22,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/items")
 public class ItemController {
-    ItemService itemService;
-    ItemMapper itemMapper;
-    CommentMapper commentMapper;
-    ItemMapperForOwner itemMapperForOwner;
+    private final ItemService itemService;
+    private final ItemMapper itemMapper;
+    private final CommentMapper commentMapper;
+    private final ItemMapperForOwner itemMapperForOwner;
 
     @Autowired
     public ItemController(ItemService itemService, ItemMapper itemMapper,

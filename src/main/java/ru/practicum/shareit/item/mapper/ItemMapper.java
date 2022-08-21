@@ -10,7 +10,7 @@ import java.util.List;
 
 @Component
 public class ItemMapper {
-    CommentMapper commentMapper;
+    private final CommentMapper commentMapper;
 
     @Autowired
     public ItemMapper(CommentMapper commentMapper) {

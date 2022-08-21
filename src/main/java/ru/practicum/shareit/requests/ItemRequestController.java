@@ -12,7 +12,7 @@ import java.util.List;
 @Slf4j
 @RequestMapping(path = "/requests")
 public class ItemRequestController {
-    RequestService requestService;
+    private final RequestService requestService;
 
     @Autowired
     public ItemRequestController(RequestService requestService) {

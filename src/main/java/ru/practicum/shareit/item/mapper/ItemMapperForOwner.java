@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class ItemMapperForOwner {
-    BookingRepository bookingRepository;
-    CommentMapper commentMapper;
+    private final BookingRepository bookingRepository;
+    private final CommentMapper commentMapper;
 
     @Autowired
     public ItemMapperForOwner(BookingRepository bookingRepository, CommentMapper commentMapper) {

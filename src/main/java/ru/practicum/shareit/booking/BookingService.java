@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class BookingService {
-    BookingRepository bookingRepository;
-    ItemService itemService;
-    UserService userService;
-    BookingMapper bookingMapper;
+    private final BookingRepository bookingRepository;
+    private final ItemService itemService;
+    private final UserService userService;
+    private final BookingMapper bookingMapper;
 
     @Autowired
     public BookingService(BookingRepository bookingRepository, ItemService itemService,

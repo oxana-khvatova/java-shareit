@@ -31,12 +31,12 @@ import java.util.Optional;
 @Service
 public class ItemService {
 
-    ItemRepository itemRepository;
-    UserRepository userRepository;
-    CommentRepository commentRepository;
-    BookingRepository bookingRepository;
-    ItemMapper itemMapper;
-    ItemMapperForOwner itemMapperForOwner;
+    private final ItemRepository itemRepository;
+    private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
+    private final BookingRepository bookingRepository;
+    private final ItemMapper itemMapper;
+    private ItemMapperForOwner itemMapperForOwner;
 
     @Autowired
     public ItemService(ItemRepository itemRepository, UserRepository userRepository,

@@ -13,8 +13,8 @@ import java.util.List;
 @Slf4j
 @RequestMapping(path = "/bookings")
 public class BookingController {
-    BookingService bookingService;
-    BookingMapper bookingMapper;
+    private final BookingService bookingService;
+    private final BookingMapper bookingMapper;
 
     @Autowired
     public BookingController(BookingService bookingService, BookingMapper bookingMapper) {

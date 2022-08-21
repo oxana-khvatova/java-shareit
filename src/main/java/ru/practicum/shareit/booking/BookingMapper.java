@@ -17,8 +17,8 @@ import java.util.List;
 
 @Component
 public class BookingMapper {
-    ItemService itemService;
-    UserService userService;
+    private final ItemService itemService;
+    private final UserService userService;
 
     @Autowired
     public BookingMapper(ItemService itemService, UserService userService) {

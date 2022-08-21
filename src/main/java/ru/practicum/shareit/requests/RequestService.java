@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class RequestService {
-    RequestRepository requestRepository;
-    ItemRequestMapper itemRequestMapper;
-    UserService userService;
+    private final RequestRepository requestRepository;
+    private final ItemRequestMapper itemRequestMapper;
+    private final UserService userService;
 
     @Autowired
     public RequestService(RequestRepository requestRepository,
