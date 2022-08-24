@@ -10,7 +10,7 @@ import java.util.List;
 
 @Component
 public class ItemMapper {
-    CommentMapper commentMapper;
+    private final CommentMapper commentMapper;
 
     @Autowired
     public ItemMapper(CommentMapper commentMapper) {
@@ -24,7 +24,7 @@ public class ItemMapper {
                 item.getDescription(),
                 item.getAvailable(),
                 item.getRequest() != null ? item.getRequest() : null,
-                item.getRequest() != null ? item.getRequest() : null,
+                item.getOwner() != null ? item.getOwner() : null,
                 commentMapper.toCommentListDto(item.getComments())
         );
     }

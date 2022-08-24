@@ -7,15 +7,14 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
-/**
- * // TODO .
- */
 @Data
 @AllArgsConstructor
 public class ItemRequestDto {
+    @NotNull
+    private Long id;
     @Size(max = 300)
     private String description;
     @NotNull
-    private Long idRequest;
+    private Long requesterId;
     private LocalDateTime created;
 }

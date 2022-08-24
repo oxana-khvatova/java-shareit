@@ -12,7 +12,7 @@ import java.util.List;
 
 @Component
 public class CommentMapper {
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public CommentMapper(UserRepository userRepository) {

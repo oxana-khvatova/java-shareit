@@ -1,6 +1,9 @@
 package ru.practicum.shareit.item.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.model.Booking;
@@ -28,12 +31,12 @@ import java.util.Optional;
 @Service
 public class ItemService {
 
-    ItemRepository itemRepository;
-    UserRepository userRepository;
-    CommentRepository commentRepository;
-    BookingRepository bookingRepository;
-    ItemMapper itemMapper;
-    ItemMapperForOwner itemMapperForOwner;
+    private final ItemRepository itemRepository;
+    private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
+    private final BookingRepository bookingRepository;
+    private final ItemMapper itemMapper;
+    private ItemMapperForOwner itemMapperForOwner;
 
     @Autowired
     public ItemService(ItemRepository itemRepository, UserRepository userRepository,
@@ -47,11 +50,13 @@ public class ItemService {
         this.itemMapperForOwner = itemMapperForOwner;
     }
 
-    public List<Item> search(String name) {
+    public List<Item> search(String name, int from, int size) {
         if (name.isBlank()) {
             return new ArrayList<>();
         }
-        return itemRepository.search(name);
+        Sort sortById = Sort.by(Sort.Direction.ASC, "id");
+        Pageable page = PageRequest.of(from, size, sortById);
+        return itemRepository.search(name, page);
     }
 
     public Item save(Item item, Long userId) {
@@ -91,8 +96,10 @@ public class ItemService {
         return itemRepository.findAll();
     }
 
-    public List<Item> findAllOwnerItems(Long idOwner) {
-        return itemRepository.findByOwner(idOwner);
+    public List<Item> findAllOwnerItems(Long idOwner, int from, int size) {
+        Sort sortById = Sort.by(Sort.Direction.ASC, "id");
+        Pageable page = PageRequest.of(from, size, sortById);
+        return itemRepository.findByOwner(idOwner, page);
     }
 
     public Comments addComments(Long userId, Long itemId, Comments comments) {

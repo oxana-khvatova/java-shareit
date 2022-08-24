@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class BookingService {
-    BookingRepository bookingRepository;
-    ItemService itemService;
-    UserService userService;
-    BookingMapper bookingMapper;
+    private final BookingRepository bookingRepository;
+    private final ItemService itemService;
+    private final UserService userService;
+    private final BookingMapper bookingMapper;
 
     @Autowired
     public BookingService(BookingRepository bookingRepository, ItemService itemService,
@@ -81,7 +81,7 @@ public class BookingService {
             return booking.get();
         } else {
             log.error("Бронирование невозможно, вещь недоступна");
-            throw new BookingNotFoundException(" Booking is impossible");
+            throw new BookingNotFoundException("Booking is impossible");
         }
     }
 
@@ -97,12 +97,14 @@ public class BookingService {
     }
 
     public List<BookingDto> getAllBookingForUser(Long bookerId) {
+        userService.findById(bookerId); // Проверка, что пользователь существует;
         List<Booking> bookingList = bookingRepository.findByBookerId(bookerId).stream()
                 .sorted((o1, o2) -> o2.getStart().compareTo(o1.getStart())).collect(Collectors.toList());
         return bookingMapper.toBookingDtoList(bookingList);
     }
 
     public List<BookingDto> getAllBookingForOwner(Long ownerId) {
+        userService.findById(ownerId); // Проверка, что владелец существует;
         List<Booking> bookingList = bookingRepository.findByOwnerId(ownerId).stream()
                 .sorted((o1, o2) -> o2.getStart().compareTo(o1.getStart())).collect(Collectors.toList());
         return bookingMapper.toBookingDtoList(bookingList);

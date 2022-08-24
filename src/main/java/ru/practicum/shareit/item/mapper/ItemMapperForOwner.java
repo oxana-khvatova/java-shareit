@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class ItemMapperForOwner {
-    BookingRepository bookingRepository;
-    CommentMapper commentMapper;
+    private final BookingRepository bookingRepository;
+    private final CommentMapper commentMapper;
 
     @Autowired
     public ItemMapperForOwner(BookingRepository bookingRepository, CommentMapper commentMapper) {
@@ -32,7 +32,7 @@ public class ItemMapperForOwner {
                     item.getDescription(),
                     item.getAvailable(),
                     item.getRequest() != null ? item.getRequest() : null,
-                    item.getRequest() != null ? item.getRequest() : null,
+                    item.getOwner() != null ? item.getOwner() : null,
                     commentMapper.toCommentListDto(item.getComments()),
                     null,
                     null
@@ -69,7 +69,7 @@ public class ItemMapperForOwner {
                 item.getDescription(),
                 item.getAvailable(),
                 item.getRequest() != null ? item.getRequest() : null,
-                item.getRequest() != null ? item.getRequest() : null,
+                item.getOwner() != null ? item.getOwner() : null,
                 commentMapper.toCommentListDto(item.getComments()),
                 prev,
                 next

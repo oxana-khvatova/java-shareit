@@ -14,21 +14,13 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleUserNotFoundException(final UserNotFoundException e) {
         return new ErrorResponse(
-                String.format("Ошибка с полем \"%s\".", e.getMessage())
+                String.format("Пользователь не найден: \"%s\".", e.getMessage())
         );
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleItemNotFoundException(final ItemNotFoundException e) {
-        return new ErrorResponse(
-                String.format("Ошибка с полем \"%s\".", e.getMessage())
-        );
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleEmailException(final UserAlreadyExist e) {
         return new ErrorResponse(
                 String.format("Ошибка с полем \"%s\".", e.getMessage())
         );
@@ -46,7 +38,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleValidationException(final RuntimeException e) {
         return new ErrorResponse(
-                "Exception" + e.getMessage()
+                "Exception: " + e.getMessage()
         );
     }
 
@@ -54,7 +46,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse handleValidationException(final ForbiddenAccessException e) {
         return new ErrorResponse(
-                "Exception" + e.getMessage()
+                "Exception: " + e.getMessage()
         );
     }
 
@@ -62,7 +54,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBookingIsImpossible(final BookingIsImpossible e) {
         return new ErrorResponse(
-                "Exception" + e.getMessage()
+                "Exception: " + e.getMessage()
         );
     }
 
@@ -70,7 +62,15 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleBookingNotFoundException(final BookingNotFoundException e) {
         return new ErrorResponse(
-                "Exception" + e.getMessage()
+                "Exception: " + e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleItemRequestNotFoundException(final ItemRequestNotFoundException e) {
+        return new ErrorResponse(
+                "Exception: " + e.getMessage()
         );
     }
 }
