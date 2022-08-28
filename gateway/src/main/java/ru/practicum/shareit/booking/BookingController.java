@@ -12,18 +12,18 @@ import javax.validation.Valid;
 @Slf4j
 @RequestMapping(path = "/bookings")
 public class BookingController {
-    private final BookingClient bookingService;
+    private final BookingClient bookingClient;
 
     @Autowired
     public BookingController(BookingClient bookingService) {
-        this.bookingService = bookingService;
+        this.bookingClient = bookingService;
     }
 
     @PostMapping
     public ResponseEntity<Object> add(@RequestHeader("X-Sharer-User-Id") long userId,
                                       @Valid @RequestBody BookingForAdd booking) {
         log.info("Add booking " + booking);
-        return bookingService.bookItem(userId, booking);
+        return bookingClient.bookItem(userId, booking);
     }
 
     @PatchMapping("/{bookingId}")
@@ -31,26 +31,26 @@ public class BookingController {
                                                @PathVariable long bookingId,
                                                @RequestParam String approved) {
         log.info("upDateStatus for bookingId " + bookingId);
-        return bookingService.upDateStatus(userId, bookingId, approved);
+        return bookingClient.upDateStatus(userId, bookingId, approved);
     }
 
-    @GetMapping("/{bookingId}") //есть
+    @GetMapping("/{bookingId}")
     public ResponseEntity<Object> getBooking(@RequestHeader("X-Sharer-User-Id") long userId,
                                  @PathVariable long bookingId) {
         log.info("get bookingId " + bookingId);
-        return bookingService.getBooking(userId, bookingId);
+        return bookingClient.getBooking(userId, bookingId);
     }
 
-    @GetMapping// есть
+    @GetMapping
     public ResponseEntity<Object> getAllBookingForBooker(@RequestHeader("X-Sharer-User-Id") long bookerId,
                                                    @RequestParam(required = false, defaultValue = "ALL") String state) {
         log.info("get listBooking  for user " + bookerId);
-        return bookingService.getAllBookingForBooker(bookerId,state);
+        return bookingClient.getAllBookingForBooker(bookerId,state);
     }
 
     @GetMapping("/owner")
     public ResponseEntity<Object> getAllBookingForOwner(@RequestHeader("X-Sharer-User-Id") long ownerId,
                                                         @RequestParam(required = false, defaultValue = "ALL") String state) {
-        return bookingService.getAllBookingForOwner(ownerId,state);
+        return bookingClient.getAllBookingForOwner(ownerId,state);
     }
 }

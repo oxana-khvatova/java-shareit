@@ -6,15 +6,10 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.requests.dto.ItemRequestDto;
 
-import javax.validation.Valid;
 import java.util.Map;
 
 @Service
@@ -28,18 +23,18 @@ public class RequestsClient extends BaseClient {
                 .requestFactory(HttpComponentsClientHttpRequestFactory::new).build());
     }
 
-    public ResponseEntity<Object> add(@RequestHeader("X-Sharer-User-Id") long userId,
-                                      @Valid @RequestBody ItemRequestDto request) {
+    public ResponseEntity<Object> add(long userId,
+                                      ItemRequestDto request) {
         return post("", userId, request);
     }
 
-    public ResponseEntity<Object> getAllUserRequest(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public ResponseEntity<Object> getAllUserRequest(long userId) {
         return get("", userId);
     }
 
-    public ResponseEntity<Object> getAllRequest(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                @RequestParam(required = false, defaultValue = "0") int from,
-                                                @RequestParam(required = false, defaultValue = "20") int size) {
+    public ResponseEntity<Object> getAllRequest(long userId,
+                                                int from,
+                                                int size) {
         Map<String, Object> parameters = Map.of(
                 "from", from,
                 "size", size
@@ -47,8 +42,8 @@ public class RequestsClient extends BaseClient {
         return get("/all", userId, parameters);
     }
 
-    public ResponseEntity<Object> getRequest(@RequestHeader("X-Sharer-User-Id") long userId,
-                                             @PathVariable @Valid Long requestId) {
+    public ResponseEntity<Object> getRequest(long userId,
+                                             Long requestId) {
         return get("/" + requestId, userId);
     }
 }

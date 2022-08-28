@@ -6,14 +6,10 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserForUpdate;
-
-import javax.validation.Valid;
 
 @Service
 public class UserClient extends BaseClient {
@@ -31,19 +27,19 @@ public class UserClient extends BaseClient {
         return get("");
     }
 
-    public ResponseEntity<Object> getUser(@PathVariable long id) {
+    public ResponseEntity<Object> getUser(long id) {
         return get("/" + id);
     }
 
-    public ResponseEntity<Object> create(@Valid @RequestBody UserDto user) {
+    public ResponseEntity<Object> create(UserDto user) {
         return post("", user);
     }
 
-    public ResponseEntity<Object> update(@PathVariable long id, @Valid @RequestBody UserForUpdate userForUpdate) {
+    public ResponseEntity<Object> update(long id, UserForUpdate userForUpdate) {
         return patch("/" + id, userForUpdate);
     }
 
-    public ResponseEntity<Object> deleteById(@PathVariable long id) {
-        return delete("/"+id);
+    public ResponseEntity<Object> deleteById(long id) {
+        return delete("/" + id);
     }
 }

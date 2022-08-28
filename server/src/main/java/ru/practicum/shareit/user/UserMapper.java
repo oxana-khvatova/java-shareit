@@ -24,6 +24,7 @@ public class UserMapper {
         }
         return listDto;
     }
+
     public User toUser(UserDto userDto) {
         User user = new User();
         user.setName(userDto.getName());

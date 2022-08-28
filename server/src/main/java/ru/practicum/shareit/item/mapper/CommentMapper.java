@@ -46,6 +46,7 @@ public class CommentMapper {
         comment.setCreated(commentsDto.getCreated());
         return comment;
     }
+
     public List<Comments> toCommentsList(List<CommentDto> commentsDto) {
         List<Comments> com = new ArrayList<>();
         for (CommentDto comment : commentsDto) {

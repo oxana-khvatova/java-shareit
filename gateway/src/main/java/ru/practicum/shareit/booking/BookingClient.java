@@ -6,8 +6,6 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.booking.dto.BookingForAdd;
 import ru.practicum.shareit.client.BaseClient;
@@ -59,9 +57,7 @@ public class BookingClient extends BaseClient {
         return patch("/" + bookingId + "?approved={approved}", userId, parameters, null);
     }
 
-    public ResponseEntity<Object> getAll(@RequestHeader("X-Sharer-User-Id") long idUser,
-                                         @RequestParam(required = false, defaultValue = "0") int from,
-                                         @RequestParam(required = false, defaultValue = "20") int size) {
+    public ResponseEntity<Object> getAll(long idUser, int from, int size) {
         Map<String, Object> parameters = Map.of(
                 "from", from,
                 "size", size
