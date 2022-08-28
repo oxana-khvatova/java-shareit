@@ -23,7 +23,8 @@ public class CommentMapper {
         User user;
         if (userRepository.findById(comments.getAuthorId()).isPresent()) {
             user = userRepository.findById(comments.getAuthorId()).get();
-            return new CommentDto(comments.getId(), comments.getText(), user.getName(), comments.getCreated());
+            return new CommentDto(comments.getId(), comments.getText(), user.getId(),
+                    comments.getItemId(), comments.getCreated());
         }
         return null;
     }
@@ -35,4 +36,22 @@ public class CommentMapper {
         }
         return com;
     }
+
+    public Comments toComment(CommentDto commentsDto) {
+        Comments comment = new Comments();
+        comment.setId(commentsDto.getId());
+        comment.setItemId(commentsDto.getItemId());
+        comment.setText(commentsDto.getText());
+        comment.setAuthorId(commentsDto.getAuthorId());
+        comment.setCreated(commentsDto.getCreated());
+        return comment;
+    }
+    public List<Comments> toCommentsList(List<CommentDto> commentsDto) {
+        List<Comments> com = new ArrayList<>();
+        for (CommentDto comment : commentsDto) {
+            com.add(toComment(comment));
+        }
+        return com;
+    }
+
 }

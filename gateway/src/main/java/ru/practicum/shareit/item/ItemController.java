@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemForUpdate;
 
 import javax.validation.Valid;
 
@@ -29,8 +30,8 @@ public class ItemController {
     @PatchMapping("/{itemId}") // Переделан ItemForUpdate в ItemDto
     public ResponseEntity<Object> update(@RequestHeader("X-Sharer-User-Id") long userId,
                                          @PathVariable long itemId,
-                                         @Valid @RequestBody ItemDto item) {
-        return itemClient.update(itemId, userId, item);
+                                         @Valid @RequestBody ItemForUpdate item) {
+        return itemClient.update(userId, itemId, item);
     }
 
     @GetMapping
@@ -43,7 +44,7 @@ public class ItemController {
     @GetMapping("/{itemId}")
     public ResponseEntity<Object> getItem(@RequestHeader("X-Sharer-User-Id") long idUser,
                                           @PathVariable long itemId) {
-        return itemClient.getItem(itemId, idUser);
+        return itemClient.getItem(idUser, itemId);
     }
 
     @GetMapping("/search")

@@ -50,17 +50,16 @@ public class ItemService {
         this.itemMapperForOwner = itemMapperForOwner;
     }
 
-    public List<Item> search(String name, int from, int size) {
-        if (name.isBlank()) {
+    public List<Item> search(String text, int from, int size) {
+        if (text.isBlank()) {
             return new ArrayList<>();
         }
         Sort sortById = Sort.by(Sort.Direction.ASC, "id");
         Pageable page = PageRequest.of(from, size, sortById);
-        return itemRepository.search(name, page);
+        return itemRepository.search(text, page);
     }
 
-    public Item save(ItemDto itemDto, Long userId) {
-        Item item = findById(itemDto.getId());
+    public Item save(Item item, Long userId) {
         if (userRepository.findById(userId).isPresent()) {
             item.setOwner(userId);
         } else {

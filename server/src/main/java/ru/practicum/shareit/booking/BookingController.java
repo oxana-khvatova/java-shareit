@@ -51,7 +51,7 @@ public class BookingController {
         return bookingService.getAllBookingForUser(bookerId);
     }
 
-    @GetMapping("/owner")// есть
+    @GetMapping("/owner")
     public List<BookingDto> getAllBookingForOwner(@RequestHeader("X-Sharer-User-Id") long ownerId,
                                                   @RequestParam(required = false, defaultValue = "ALL") String state) {
         log.info("get listBooking for owner " + ownerId);

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.DefaultUriBuilderFactory;
@@ -13,6 +14,7 @@ import ru.practicum.shareit.client.BaseClient;
 
 import java.util.Map;
 
+@Service
 public class BookingClient extends BaseClient {
 
     private static final String API_PREFIX = "/bookings";
@@ -31,7 +33,7 @@ public class BookingClient extends BaseClient {
         Map<String, Object> parameters = Map.of(
                 "status", state
         );
-        return get("/" + userId, userId, parameters);
+        return get("/owner", userId, parameters);
     }
 
 
@@ -47,14 +49,14 @@ public class BookingClient extends BaseClient {
         Map<String, Object> parameters = Map.of(
                 "status", state
         );
-        return get("", userId, parameters);
+        return get("?status={status}", userId, parameters);
     }
 
     public ResponseEntity<Object> upDateStatus(long userId, Long bookingId, String approved) {
         Map<String, Object> parameters = Map.of(
                 "approved", approved
         );
-        return patch("/" + bookingId, userId, parameters);
+        return patch("/" + bookingId + "?approved={approved}", userId, parameters, null);
     }
 
     public ResponseEntity<Object> getAll(@RequestHeader("X-Sharer-User-Id") long idUser,
@@ -64,6 +66,6 @@ public class BookingClient extends BaseClient {
                 "from", from,
                 "size", size
         );
-        return get("",idUser, parameters);
+        return get("?from={from}&size={size}", idUser, parameters);
     }
 }

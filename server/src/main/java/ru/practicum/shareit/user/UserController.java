@@ -42,9 +42,10 @@ public class UserController {
 
     @PostMapping
     public UserDto create(@Valid @RequestBody UserDto userDto) {
-        User user = userService.save(userDto);
-        log.info("Новый пользователь: " + user);
-        return userMapper.toUserDto(user);
+        User user = userMapper.toUser(userDto);
+        User savedUser = userService.save(user);
+        log.info("Новый пользователь: " + savedUser);
+        return userMapper.toUserDto(savedUser);
     }
 
     @PatchMapping("/{id}")

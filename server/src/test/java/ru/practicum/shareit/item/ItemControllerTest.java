@@ -86,7 +86,7 @@ public class ItemControllerTest {
         itemRequest.setUserRequesterId(2L);
         itemRequest.setCreated(LocalDateTime.now());
 
-        commentsDto = new CommentDto(3L, "good", "ya", LocalDateTime.now());
+        commentsDto = new CommentDto(3L, "good", 1L,3L, LocalDateTime.now());
         commentsListDto = new ArrayList<>();
         commentsListDto.add(commentsDto);
 

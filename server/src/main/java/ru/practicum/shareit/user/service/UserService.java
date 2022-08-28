@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.UserNotFoundException;
+import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
@@ -23,8 +24,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User save(UserDto userDto) {
-        User user = findById(userDto.getId());
+    public User save(User user) {
         return userRepository.save(user);
     }
 

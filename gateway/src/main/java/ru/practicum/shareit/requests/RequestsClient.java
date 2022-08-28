@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -16,6 +17,7 @@ import ru.practicum.shareit.requests.dto.ItemRequestDto;
 import javax.validation.Valid;
 import java.util.Map;
 
+@Service
 public class RequestsClient extends BaseClient {
 
     private static final String API_PREFIX = "/requests";
