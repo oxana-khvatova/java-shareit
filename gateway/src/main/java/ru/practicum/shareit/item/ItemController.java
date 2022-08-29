@@ -24,13 +24,15 @@ public class ItemController {
     @PostMapping
     public ResponseEntity<Object> add(@RequestHeader("X-Sharer-User-Id") long userId,
                                       @Valid @RequestBody ItemDto item) {
+        log.info("Add item " + item);
         return itemClient.add(userId, item);
     }
 
-    @PatchMapping("/{itemId}") // Переделан ItemForUpdate в ItemDto
+    @PatchMapping("/{itemId}")
     public ResponseEntity<Object> update(@RequestHeader("X-Sharer-User-Id") long userId,
                                          @PathVariable long itemId,
                                          @Valid @RequestBody ItemForUpdate item) {
+        log.info("Update item " + itemId);
         return itemClient.update(userId, itemId, item);
     }
 
@@ -38,12 +40,14 @@ public class ItemController {
     public ResponseEntity<Object> getAll(@RequestHeader("X-Sharer-User-Id") long idUser,
                                          @RequestParam(required = false, defaultValue = "0") int from,
                                          @RequestParam(required = false, defaultValue = "20") int size) {
+        log.info("Get all items for user " + idUser);
         return itemClient.getAll(idUser, from, size);
     }
 
     @GetMapping("/{itemId}")
     public ResponseEntity<Object> getItem(@RequestHeader("X-Sharer-User-Id") long idUser,
                                           @PathVariable long itemId) {
+        log.info("Get item " + itemId);
         return itemClient.getItem(idUser, itemId);
     }
 
@@ -52,6 +56,7 @@ public class ItemController {
                                                 @RequestParam(required = false) String text,
                                                 @RequestParam(required = false, defaultValue = "0") int from,
                                                 @RequestParam(required = false, defaultValue = "20") int size) {
+        log.info("Get item with searched text " + text);
         return itemClient.getItemSearch(idUser, text, from, size);
     }
 
@@ -59,6 +64,7 @@ public class ItemController {
     public ResponseEntity<Object> addComment(@RequestHeader("X-Sharer-User-Id") long userId,
                                              @PathVariable long itemId,
                                              @Valid @RequestBody CommentDto comments) {
+        log.info("Add comment " + comments);
         return itemClient.addComment(userId, itemId, comments);
     }
 }
